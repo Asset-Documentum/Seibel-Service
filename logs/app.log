@@ -1,0 +1,52 @@
+2024-12-01 15:51:28 INFO  com.asset.voda.FolderWatcher - Watching folder: G:/Vodafone/CRs/Seibel-Service/Seibel/To-Be Processed
+2024-12-02 10:37:24 INFO  com.asset.voda.FolderWatcher - Watching folder: G:/Vodafone/CRs/Seibel-Service/Seibel/To-Be Processed
+2024-12-02 10:45:36 INFO  com.asset.voda.FolderWatcher - New document detected: Test 1.pdf
+2024-12-02 10:45:36 INFO  com.asset.voda.Seibel - Starting upload for document: Test 1.pdf
+2024-12-02 10:45:36 INFO  com.asset.voda.Seibel - Starting upload for document: Test 3.pdf
+2024-12-02 10:45:36 INFO  com.asset.voda.Seibel - Starting upload for document: Test 2.pdf
+2024-12-02 10:45:44 INFO  com.asset.voda.Seibel - Successfully uploaded: Test 1.pdf
+2024-12-02 10:45:44 INFO  com.asset.voda.Seibel - Successfully uploaded: Test 3.pdf
+2024-12-02 10:45:44 INFO  com.asset.voda.Seibel - Successfully uploaded: Test 2.pdf
+2024-12-02 10:45:44 ERROR com.asset.voda.Seibel - Error processing document: Test 3.pdf
+java.lang.NullPointerException: Cannot invoke "com.asset.voda.MachineDetails.databaseConnection(String, String)" because "com.asset.voda.Seibel.machineDetails" is null
+	at com.asset.voda.Seibel.handleDocument(Seibel.java:45)
+	at com.asset.voda.DocumentUploaderManager.lambda$distributeAndUpload$1(DocumentUploaderManager.java:36)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2024-12-02 10:45:44 ERROR com.asset.voda.Seibel - Error processing document: Test 2.pdf
+java.lang.NullPointerException: Cannot invoke "com.asset.voda.MachineDetails.databaseConnection(String, String)" because "com.asset.voda.Seibel.machineDetails" is null
+	at com.asset.voda.Seibel.handleDocument(Seibel.java:45)
+	at com.asset.voda.DocumentUploaderManager.lambda$distributeAndUpload$1(DocumentUploaderManager.java:36)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2024-12-02 10:45:44 ERROR com.asset.voda.Seibel - Error processing document: Test 1.pdf
+java.lang.NullPointerException: Cannot invoke "com.asset.voda.MachineDetails.databaseConnection(String, String)" because "com.asset.voda.Seibel.machineDetails" is null
+	at com.asset.voda.Seibel.handleDocument(Seibel.java:45)
+	at com.asset.voda.DocumentUploaderManager.lambda$distributeAndUpload$1(DocumentUploaderManager.java:36)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2024-12-02 10:45:44 INFO  com.asset.voda.FolderWatcher - New document detected: Test 2.pdf
+2024-12-02 10:45:44 INFO  com.asset.voda.Seibel - Starting upload for document: Test 4.pdf
+2024-12-02 10:45:44 INFO  com.asset.voda.Seibel - Successfully uploaded: Test 4.pdf
+2024-12-02 10:45:44 ERROR com.asset.voda.Seibel - Error processing document: Test 4.pdf
+java.lang.NullPointerException: Cannot invoke "com.asset.voda.MachineDetails.databaseConnection(String, String)" because "com.asset.voda.Seibel.machineDetails" is null
+	at com.asset.voda.Seibel.handleDocument(Seibel.java:45)
+	at com.asset.voda.DocumentUploaderManager.lambda$distributeAndUpload$1(DocumentUploaderManager.java:36)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2024-12-02 10:45:44 INFO  com.asset.voda.FolderWatcher - New document detected: Test 3.pdf
+2024-12-02 10:45:44 INFO  c.asset.voda.DocumentUploaderManager - No documents to upload.
+2024-12-02 10:45:44 INFO  com.asset.voda.FolderWatcher - New document detected: Test 4.pdf
+2024-12-02 10:45:44 INFO  c.asset.voda.DocumentUploaderManager - No documents to upload.
