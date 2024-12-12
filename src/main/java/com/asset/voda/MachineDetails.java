@@ -17,7 +17,22 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
+/**
+ * A singleton class for retrieving machine-specific details and managing database audit records.
+ * This class handles machine metadata, database connections, and secure password decryption.
+ */
+
 public class MachineDetails {
+
+    private static final MachineDetails instance;
+
+    static {
+        try {
+            instance = new MachineDetails();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private static final Logger logger = LoggerFactory.getLogger(MachineDetails.class);
 
@@ -34,7 +49,12 @@ public class MachineDetails {
     private StringBuilder macAddress;
     private String machineName;
 
-    public MachineDetails() throws Exception {
+    // Get the singleton instance
+    public static MachineDetails getInstance() {
+        return instance;
+    }
+
+    private MachineDetails() throws Exception {
         try {
             String DB_URL = PathsConfig.DB_URL;
             String USER = PathsConfig.USER;
@@ -74,6 +94,7 @@ public class MachineDetails {
         }
     }
 
+    // Method to decrypt the encrypted password which in config.properties
     public static String decryptPassword(String encryptedPassword) throws Exception {
         byte[] combined = Base64.getDecoder().decode(encryptedPassword);
 
@@ -94,6 +115,7 @@ public class MachineDetails {
         return new String(decrypted);
     }
 
+    // Method to that audit the action details in Oracle database
     public void databaseConnection(String docType, String affectedCustomer, String status) {
         try {
             // Get the current timestamp
@@ -120,6 +142,7 @@ public class MachineDetails {
         }
     }
 
+    // Method to close the connection with database after the end of audit action
     public void closeConnection() {
         try {
             if (connection != null && !connection.isClosed()) {

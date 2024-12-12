@@ -5,6 +5,11 @@ import java.nio.file.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Watches the folder designated for processing documents. It processes existing folders
+ * that follow a specific date format (e.g., "DD-MM-YYYY") and handles the documents within.
+ * It does not watch for new files, but rather processes folders that already exist.
+ */
 public class FolderWatcher {
 
     private static final Logger logger = LoggerFactory.getLogger(FolderWatcher.class);
@@ -13,16 +18,27 @@ public class FolderWatcher {
 
     private MachineDetails machineDetails;
 
-    // Method to check whether the name of folder is vaild or not
+    /**
+     * Checks whether the given folder name matches the expected date format (DD-MM-YYYY).
+     *
+     * @param folder The folder to check.
+     * @return True if the folder name matches the date format; otherwise, false.
+     */
     private boolean isValidDateFolder(File folder) {
         return folder.getName().matches("\\d{2}-\\d{2}-\\d{4}");
     }
 
-    // Method to process a folder by passing it to DocumentUploaderManager
+    /**
+     * Processes a folder by passing it to the DocumentUploaderManager to distribute and upload documents.
+     * After processing, a summary of the process is generated.
+     *
+     * @param folderPath The path of the folder to process.
+     */
     private void processFolder(Path folderPath) {
         try {
-            machineDetails = new MachineDetails();
+
             DocumentsStatus documentsStatus = DocumentsStatus.getInstance();
+            MachineDetails machineDetails = MachineDetails.getInstance();
 
             uploaderManager.distributeAndUpload(folderPath);
 
@@ -33,17 +49,23 @@ public class FolderWatcher {
         }
     }
 
-    // Modified method to only process existing folders, without watching for new files
+    /**
+     * Watches the folder designated for processing documents. It processes existing folders
+     * that follow a specific date format (e.g., "DD-MM-YYYY").
+     */
     public void watchFolder() {
         try {
+            // Validate the folder path
             File folder = new File(TO_BE_PROCESSED);
             if (!folder.exists() || !folder.isDirectory()) {
                 logger.error("Invalid folder path: {}", TO_BE_PROCESSED);
                 return;
             }
 
+            // Get all subdirectories in the specified folder
             File[] dateFolders = folder.listFiles(File::isDirectory);
 
+            // Process each folder that matches the date format
             if (dateFolders != null) {
                 for (File dateFolder : dateFolders) {
                     if (!isValidDateFolder(dateFolder)) {
@@ -53,6 +75,7 @@ public class FolderWatcher {
                     logger.info("Existing folder detected: {}", dateFolder.getName());
                     processFolder(dateFolder.toPath());
                 }
+                // Close the connection after processing
                 machineDetails.closeConnection();
             }
         } catch (Exception e) {

@@ -8,6 +8,10 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+/**
+ * A singleton class for tracking the status of document uploads and generating a JSON summary file.
+ * This class manages counters for successful and failed uploads and saves a summary report in JSON format.
+ */
 public class DocumentsStatus {
 
     private static final DocumentsStatus instance = new DocumentsStatus();

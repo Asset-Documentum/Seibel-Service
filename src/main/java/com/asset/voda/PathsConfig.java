@@ -5,6 +5,12 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * A utility class for loading and storing application configurations.
+ * This class initializes paths for file workflows and credentials for database connections
+ * from a properties file (resources/config.properties).
+ */
+
 public class PathsConfig {
     private static final Logger logger = LoggerFactory.getLogger(PathsConfig.class);
 
@@ -42,6 +48,7 @@ public class PathsConfig {
             DB_URL = prop.getProperty("url");
             USER = prop.getProperty("user");
             PASSWORD = prop.getProperty("password");
+
         } catch (Exception e) {
             logger.error("Error loading configuration", e);
             throw new RuntimeException("Failed to load configuration", e);

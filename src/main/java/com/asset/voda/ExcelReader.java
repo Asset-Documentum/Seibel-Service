@@ -8,10 +8,15 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * A utility class for reading metadata from Excel files and generating Excel reports.
+ * Provides methods to extract metadata for documents and create detailed reports in Excel format.
+ */
 public class ExcelReader {
 
     private static final Logger logger = LoggerFactory.getLogger(ExcelReader.class);
 
+    // Reads metadata from the given Excel file and maps it to document names
     public static Map<String, Map<String, String>> readMetadataFromExcel(File excelFile) throws IOException {
         Map<String, Map<String, String>> documentMetadataMap = new HashMap<>();
 
@@ -38,6 +43,7 @@ public class ExcelReader {
         return documentMetadataMap;
     }
 
+    // Generates an Excel report based on the provided metadata list and saves it to a file
     public static void generateExcelReport(List<Map<String, Object>> metadataList, File reportFile) {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Document Upload Report");
@@ -77,7 +83,7 @@ public class ExcelReader {
         }
     }
 
-
+    // Helper method to get a cell value as a string
     private static String getCellValueAsString(Cell cell) {
         if (cell == null) {
             return "";
