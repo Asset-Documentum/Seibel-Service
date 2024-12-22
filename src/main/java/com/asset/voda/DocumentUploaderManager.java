@@ -88,29 +88,32 @@ public class DocumentUploaderManager {
                 return;
             }
 
-            // Upload the document using metadata
-            uploader.handleDocument(document,
-                    metadata.get("doc_type"),
-                    documentName,
-                    cleanContractNo(metadata.get("cch_contract_no")),
-                    metadata.get("cch_sfid"),
-                    metadata.get("cch_source"),
-                    metadata.get("cch_customer_name"),
-                    metadata.get("cch_customer_id"),
-                    metadata.get("cch_customer_account"),
-                    metadata.get("cch_box_no"),
-                    metadata.get("cch_mobile_no"),
-                    metadata.get("cch_department_code"),
-                    metadata.get("deleteflag"),
-                    metadata.get("cch_status"),
-                    metadata.get("cch_sub_department_code"),
-                    metadata.get("cch_sim_no"),
-                    metadata.get("cch_comments"),
-                    folderPath);
+            // Build MetadataDTO
+            MetadataDTO metadataDTO = new MetadataDTO();
+            metadataDTO.setObject_name(documentName);
+            metadataDTO.setR_object_type(metadata.get("doc_type"));
+            metadataDTO.setCch_contract_no(metadata.get("cch_contract_no"));
+            metadataDTO.setCch_sfid(metadata.get("cch_sfid"));
+            metadataDTO.setCch_source(metadata.get("cch_source"));
+            metadataDTO.setCch_customer_name(metadata.get("cch_customer_name"));
+            metadataDTO.setCch_customer_id(metadata.get("cch_customer_id"));
+            metadataDTO.setCch_customer_account(metadata.get("cch_customer_account"));
+            metadataDTO.setCch_box_no(metadata.get("cch_box_no"));
+            metadataDTO.setCch_department_code(metadata.get("cch_department_code"));
+            metadataDTO.setDeleteflag(metadata.get("deleteflag"));
+            metadataDTO.setCch_status(metadata.get("cch_status"));
+            metadataDTO.setCch_comments(metadata.get("cch_comments"));
+            metadataDTO.setCch_sub_department_code(metadata.get("cch_sub_department_code"));
+            metadataDTO.setCch_sim_no(Collections.singletonList(metadata.get("cch_sim_no")));
+            metadataDTO.setCch_mobile_no(Collections.singletonList(metadata.get("cch_mobile_no")));
+
+            // Call handleDocument with MetadataDTO
+            uploader.handleDocument(document, metadataDTO, folderPath);
         } catch (Exception e) {
             logger.error("Error processing document: {}", document.getName(), e);
         }
     }
+
 
     /**
      * Gracefully shuts down the executor service after processing tasks.
