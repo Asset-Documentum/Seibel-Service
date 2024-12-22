@@ -44,7 +44,7 @@ public class ExcelReader {
     }
 
     // Generates an Excel report based on the provided metadata list and saves it to a file
-    public static void generateExcelReport(List<Map<String, Object>> metadataList, File reportFile) {
+    public static void generateExcelReport(List<MetadataDTO> metadataList, File reportFile) {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Document Upload Report");
 
@@ -53,24 +53,42 @@ public class ExcelReader {
                 return;
             }
 
-            // Create header row
+            // Create header row based on MetadataDTO fields
             Row headerRow = sheet.createRow(0);
-            Map<String, Object> sampleMetadata = metadataList.get(0); // Assume all maps have the same keys
-            List<String> headers = new ArrayList<>(sampleMetadata.keySet());
-            for (int i = 0; i < headers.size(); i++) {
+            String[] headers = {
+                    "Object Name", "Document Type", "Contract No", "SFID", "Source", "Customer Name",
+                    "Customer ID", "Customer Account", "Box No", "Department Code", "Delete Flag",
+                    "Status", "Comments", "Sub-Department Code", "SIM No", "Mobile No"
+            };
+
+            for (int i = 0; i < headers.length; i++) {
                 Cell headerCell = headerRow.createCell(i);
-                headerCell.setCellValue(headers.get(i));
+                headerCell.setCellValue(headers[i]);
             }
 
-            // Populate rows with metadata
+            // Populate rows with metadata from MetadataDTO
             int rowNum = 1;
-            for (Map<String, Object> metadata : metadataList) {
+            for (MetadataDTO dto : metadataList) {
                 Row row = sheet.createRow(rowNum++);
-                for (int i = 0; i < headers.size(); i++) {
-                    Cell cell = row.createCell(i);
-                    String value = String.valueOf(metadata.getOrDefault(headers.get(i), ""));
-                    cell.setCellValue(value);
-                }
+
+                row.createCell(0).setCellValue(dto.getObject_name());
+                row.createCell(1).setCellValue(dto.getR_object_type());
+                row.createCell(2).setCellValue(dto.getCch_contract_no());
+                row.createCell(3).setCellValue(dto.getCch_sfid());
+                row.createCell(4).setCellValue(dto.getCch_source());
+                row.createCell(5).setCellValue(dto.getCch_customer_name());
+                row.createCell(6).setCellValue(dto.getCch_customer_id());
+                row.createCell(7).setCellValue(dto.getCch_customer_account());
+                row.createCell(8).setCellValue(dto.getCch_box_no());
+                row.createCell(9).setCellValue(dto.getCch_department_code());
+                row.createCell(10).setCellValue(dto.getDeleteflag());
+                row.createCell(11).setCellValue(dto.getCch_status());
+                row.createCell(12).setCellValue(dto.getCch_comments());
+                row.createCell(13).setCellValue(dto.getCch_sub_department_code());
+
+                // Handle lists for SIM No and Mobile No
+                row.createCell(14).setCellValue(String.join(", ", dto.getCch_sim_no()));
+                row.createCell(15).setCellValue(String.join(", ", dto.getCch_mobile_no()));
             }
 
             // Write to the Excel file
@@ -82,6 +100,7 @@ public class ExcelReader {
             logger.error("Error generating Excel report", e);
         }
     }
+
 
     // Helper method to get a cell value as a string
     private static String getCellValueAsString(Cell cell) {

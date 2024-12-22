@@ -25,8 +25,8 @@ public class Seibel {
     private final String USERNAME = PathsConfig.USERNAME;
     private final String PASS = PathsConfig.PASS;
 
-    private final List<Map<String, Object>> uploadedMetadata = Collections.synchronizedList(new ArrayList<>());
-    private final List<Map<String, Object>> failedMetadata = Collections.synchronizedList(new ArrayList<>());
+    private final List<MetadataDTO> uploadedMetadata = Collections.synchronizedList(new ArrayList<>());
+    private final List<MetadataDTO> failedMetadata = Collections.synchronizedList(new ArrayList<>());
 
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -42,8 +42,6 @@ public class Seibel {
             DocumentsStatus documentsStatus = DocumentsStatus.getInstance();
             MachineDetails machineDetails = MachineDetails.getInstance();
 
-            Map<String, Object> metadata = createMetadata(metadataDTO);
-
             String folderName = folderPath.getFileName().toString();
             Path processedFolder = Paths.get(PathsConfig.PROCESSED, folderName);
             Path failedFolder = Paths.get(PathsConfig.FAILED, folderName);
@@ -54,10 +52,10 @@ public class Seibel {
             File processedReport = new File(processedFolder.toFile(), "Data.xlsx");
             File failedReport = new File(failedFolder.toFile(), "Data.xlsx");
 
-            boolean uploadSuccess = uploadToDocumentum(document, metadata);
+            boolean uploadSuccess = uploadToDocumentum(document, metadataDTO);
 
             if (uploadSuccess) {
-                uploadedMetadata.add(metadata);
+                uploadedMetadata.add(metadataDTO);
                 documentsStatus.incrementSuccess();
                 logger.info("Successfully uploaded: {}", document.getName());
                 machineDetails.databaseConnection(metadataDTO.getR_object_type(), metadataDTO.getObject_name(), "Success");
@@ -68,12 +66,12 @@ public class Seibel {
                     toBeProcessedDoc.delete();
                 }
             } else {
-                failedMetadata.add(metadata);
+                failedMetadata.add(metadataDTO);
                 documentsStatus.incrementFailure();
 
                 int retries = 3;
                 while (retries > 0 && !uploadSuccess) {
-                    uploadSuccess = uploadToDocumentum(document, metadata);
+                    uploadSuccess = uploadToDocumentum(document, metadataDTO);
                     retries--;
                     logger.warn("Retrying upload for: {}. Attempts left: {}", document.getName(), retries);
                 }
@@ -96,28 +94,7 @@ public class Seibel {
         }
     }
 
-    private Map<String, Object> createMetadata(MetadataDTO metadataDTO) {
-        Map<String, Object> metadata = new HashMap<>();
-        metadata.put("object_name", metadataDTO.getObject_name());
-        metadata.put("r_object_type", metadataDTO.getR_object_type());
-        metadata.put("cch_contract_no", metadataDTO.getCch_contract_no());
-        metadata.put("cch_sfid", metadataDTO.getCch_sfid());
-        metadata.put("cch_source", metadataDTO.getCch_source());
-        metadata.put("cch_customer_name", metadataDTO.getCch_customer_name());
-        metadata.put("cch_customer_id", metadataDTO.getCch_customer_id());
-        metadata.put("cch_box_no", metadataDTO.getCch_box_no());
-        metadata.put("cch_department_code", metadataDTO.getCch_department_code());
-        metadata.put("deleteflag", metadataDTO.getDeleteflag());
-        metadata.put("cch_status", metadataDTO.getCch_status());
-        metadata.put("cch_comments", metadataDTO.getCch_comments());
-        metadata.put("cch_sub_department_code", metadataDTO.getCch_sub_department_code());
-        metadata.put("cch_sim_no", metadataDTO.getCch_sim_no());
-        metadata.put("cch_mobile_no", metadataDTO.getCch_mobile_no());
-        metadata.put("cch_customer_account", metadataDTO.getCch_customer_account());
-        return metadata;
-    }
-
-    private boolean uploadToDocumentum(File document, Map<String, Object> metadata) {
+    private boolean uploadToDocumentum(File document, MetadataDTO metadataDTO) {
         try {
             String url = "http://10.0.40.26:8080/dctm-rest/repositories/VFREPO/folders/0b0001c8800084fc/documents";
 
@@ -125,7 +102,7 @@ public class Seibel {
             String auth = USERNAME + ":" + decryptedPassword;
             String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
 
-            String metadataJson = gson.toJson(Collections.singletonMap("properties", metadata));
+            String metadataJson = gson.toJson(Collections.singletonMap("properties", metadataDTO));
 
             String mimeType = Files.probeContentType(document.toPath());
             ContentType fileType = mimeType != null ? ContentType.create(mimeType) : ContentType.APPLICATION_OCTET_STREAM;
